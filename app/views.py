@@ -79,7 +79,7 @@ def createPayment(request):
 
 api_view(['GET'])
 def callback(request):
-    print(request.data)
+    print(request)
     return Response({'message' : 'Your transaction is done.'})
 
     
