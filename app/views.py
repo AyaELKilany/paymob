@@ -77,7 +77,7 @@ def createPayment(request):
     return Response({'message': 'Frame Created Successfully' + res.url})
 
 
-api_view(['GET'])
+@api_view(['GET'])
 def callback(request):
     print(request)
     return Response({'message' : 'Your transaction is done.'})
