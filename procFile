@@ -1,0 +1,2 @@
+
+web: gunicorn Paymopapp.wsgi --log-file -
