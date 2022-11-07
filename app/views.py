@@ -78,6 +78,7 @@ def createPayment(request):
 
 
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def callback(request):
     print(request)
     return Response({'message' : 'Your transaction is done.'})
