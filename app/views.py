@@ -1,12 +1,12 @@
-from django.shortcuts import render
 
-# Create your views here.
 
 from rest_framework.decorators import api_view , permission_classes
 from rest_framework.permissions import AllowAny
 from .models import Payment
 from rest_framework.response import Response
 import requests
+import threading
+from django.core.mail import send_mail
 
 
 
@@ -79,18 +79,34 @@ def createPayment(request):
     return Response({'message': 'Frame Created Successfully' + res.url})
 
 
+class HandleThreads(threading.Thread):
+    def __init__(self , message , subject , recipientList):
+        self.message = message
+        self.subject = subject
+        self.recipientList = recipientList
+        threading.Thread.__init__(self)
+    
+    def run(self):
+        from_email = 'ayaelkilany735@gmail.com'
+        send_mail(self.message, self.subject, from_email ,self.recipientList , fail_silently=False)
+        
+
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def callback(request):
     transaction_status = request.GET.get('success')
     order = request.GET.get('order')
     if transaction_status == True:
+        HandleThreads('Notification',
+                      'This a confirmation message that your transaction is done' , 
+                      ['ayaelkilany735@gmail.com']).start()
         payment = Payment.objects.get(order_id = order)
-        print(payment.status)
         payment.status = True
-        print(payment.status)
         return Response({'message' : 'Your transaction is done.'})
     else:
+        HandleThreads( 'Notification',
+                      'This a confirmation message that your transaction has a problem and it was stopped' ,
+                      ['ayaelkilany735@gmail.com']).start()
         return Response({'Error message:' : 'There was a problem with the transaction'})
 
     
