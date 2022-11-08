@@ -96,7 +96,7 @@ class HandleThreads(threading.Thread):
 @permission_classes([AllowAny])
 def callback(request):
     print(request.data)
-    order = request.data['obj']['order'][id]
+    order = request.data['obj']['order']['id']
     transaction_status = request.data['obj']['success']
     if transaction_status == True:
         HandleThreads('Notification',
