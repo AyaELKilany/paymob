@@ -14,12 +14,6 @@ import requests
 @permission_classes([AllowAny])
 def createPayment(request):
     data = request.data
-    payment = Payment(
-        client_name=data['client_name'],
-        value=data['value'],
-        currency=data['currency']
-    )
-    payment.save()
 
     payload = {
     "api_key" : "ZXlKaGJHY2lPaUpJVXpVeE1pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SnVZVzFsSWpvaU1UVTFNelU0T0RVMU5pNHdNemcxTmpJaUxDSndjbTltYVd4bFgzQnJJam96TURZeExDSmpiR0Z6Y3lJNklrMWxjbU5vWVc1MEluMC5hQUVSSVVjdVZlVl9kb3ZnZ3FfZFB4T3JSUm80UjJLdUNlRlNiMDMzMzd3WDg1WnBJb3VxMS11TXV4UjJVVngxWldYQlQ1cnhoZ1IxTVlLNW9QNHJrdw=="
@@ -39,6 +33,14 @@ def createPayment(request):
     res = requests.post("https://accept.paymob.com/api/ecommerce/orders" , json=payload)
     final_response = res.json()
     order_id = final_response['id']
+    
+    payment = Payment(
+        client_name=data['client_name'],
+        value=data['value'],
+        currency=data['currency'],
+        order_id=order_id
+    )
+    payment.save()
     
     payload ={
         'auth_token' : token,
@@ -80,8 +82,16 @@ def createPayment(request):
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def callback(request):
-    print(request)
-    return Response({'message' : 'Your transaction is done.'})
+    transaction_status = request.GET.get('success')
+    order = request.GET.get('order')
+    if transaction_status == 'true':
+        payment = Payment.objects.get(order_id = order)
+        print(payment.status)
+        payment.status = True
+        print(payment.status)
+        return Response({'message' : 'Your transaction is done.'})
+    else:
+        return Response({'Error message:' : 'There was a problem with the transaction'})
 
     
     
