@@ -91,23 +91,25 @@ class HandleThreads(threading.Thread):
         send_mail(self.message, self.subject, from_email ,self.recipientList , fail_silently=False)
         
 
-@api_view(['GET'])
+@api_view(['POST'])
 @permission_classes([AllowAny])
 def callback(request):
-    transaction_status = request.GET.get('success')
-    order = request.GET.get('order')
-    if transaction_status == True:
-        HandleThreads('Notification',
-                      'This a confirmation message that your transaction is done' , 
-                      ['ayaelkilany735@gmail.com']).start()
-        payment = Payment.objects.get(order_id = order)
-        payment.status = True
-        return Response({'message' : 'Your transaction is done.'})
-    else:
-        HandleThreads( 'Notification',
-                      'This a confirmation message that your transaction has a problem and it was stopped' ,
-                      ['ayaelkilany735@gmail.com']).start()
-        return Response({'Error message:' : 'There was a problem with the transaction'})
+    print(request.data)
+    return Response({'message' : 'Your transaction is done.'})
+    # transaction_status = request.GET.get('success')
+    # order = request.GET.get('order')
+    # if transaction_status == True:
+    #     HandleThreads('Notification',
+    #                   'This a confirmation message that your transaction is done' , 
+    #                   ['ayaelkilany735@gmail.com']).start()
+    #     payment = Payment.objects.get(order_id = order)
+    #     payment.status = True
+    #     return Response({'message' : 'Your transaction is done.'})
+    # else:
+    #     HandleThreads( 'Notification',
+    #                   'This a confirmation message that your transaction has a problem and it was stopped' ,
+    #                   ['ayaelkilany735@gmail.com']).start()
+    #     return Response({'Error message:' : 'There was a problem with the transaction'})
 
     
     
