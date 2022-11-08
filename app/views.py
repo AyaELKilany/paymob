@@ -4,6 +4,7 @@ from rest_framework.decorators import api_view , permission_classes
 from rest_framework.permissions import AllowAny
 from .models import Payment
 from rest_framework.response import Response
+from  rest_framework import  status
 import requests
 import threading
 from django.core.mail import send_mail
@@ -95,27 +96,19 @@ class HandleThreads(threading.Thread):
 @permission_classes([AllowAny])
 def callback(request):
     print(request.data)
-    try:
+    order = request.data['obj']['order'][id]
+    transaction_status = request.data['obj']['success']
+    if transaction_status == True:
         HandleThreads('Notification',
-                        'This a confirmation message that your transaction is done'  + str(request.data['obj']['success']), 
+                        'This a confirmation message that your transaction is done', 
                         ['ayaelkilany735@gmail.com']).start()
-    except:
-        raise Exception
-    return Response({'message' : 'Your transaction is done.'})
-    # transaction_status = request.GET.get('success')
-    # order = request.GET.get('order')
-    # if transaction_status == True:
-    #     HandleThreads('Notification',
-    #                   'This a confirmation message that your transaction is done' , 
-    #                   ['ayaelkilany735@gmail.com']).start()
-    #     payment = Payment.objects.get(order_id = order)
-    #     payment.status = True
-    #     return Response({'message' : 'Your transaction is done.'})
-    # else:
-    #     HandleThreads( 'Notification',
-    #                   'This a confirmation message that your transaction has a problem and it was stopped' ,
-    #                   ['ayaelkilany735@gmail.com']).start()
-    #     return Response({'Error message:' : 'There was a problem with the transaction'})
+        return Response(status=status.HTTP_200_OK)
+    else:
+        HandleThreads( 'Notification',
+                      'This a confirmation message that your transaction has a problem and it was stopped' ,
+                      ['ayaelkilany735@gmail.com']).start()
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
 
     
     
