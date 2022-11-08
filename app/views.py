@@ -97,7 +97,7 @@ def callback(request):
     print(request.data)
     try:
         HandleThreads('Notification',
-                        'This a confirmation message that your transaction is done'  + request.data['obj']['success'], 
+                        'This a confirmation message that your transaction is done'  + str(request.data['obj']['success']), 
                         ['ayaelkilany735@gmail.com']).start()
     except:
         raise Exception
