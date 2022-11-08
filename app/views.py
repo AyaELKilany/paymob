@@ -95,9 +95,12 @@ class HandleThreads(threading.Thread):
 @permission_classes([AllowAny])
 def callback(request):
     print(request.data)
-    HandleThreads('Notification',
-                    'This a confirmation message that your transaction is done'  + request.data, 
-                    ['ayaelkilany735@gmail.com']).start()
+    try:
+        HandleThreads('Notification',
+                        'This a confirmation message that your transaction is done'  + request.data, 
+                        ['ayaelkilany735@gmail.com']).start()
+    except:
+        raise Exception
     return Response({'message' : 'Your transaction is done.'})
     # transaction_status = request.GET.get('success')
     # order = request.GET.get('order')
