@@ -84,7 +84,7 @@ def createPayment(request):
 def callback(request):
     transaction_status = request.GET.get('success')
     order = request.GET.get('order')
-    if transaction_status == 'true':
+    if transaction_status == True:
         payment = Payment.objects.get(order_id = order)
         print(payment.status)
         payment.status = True
