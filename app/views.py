@@ -115,9 +115,9 @@ def callback(request):
 def Redirect(request):
     transaction_status = request.GET.get('success')
     if transaction_status == True:
-        return Response({'message' : 'Your transaction is done.'})
+        return Response({'message' : 'Your transaction is done.'} , status.HTTP_200_OK)
     else:
-        return Response({'Error message:' : 'There was a problem with the transaction'})
+        return Response({'Error message:' : 'There was a problem with the transaction'} , status.HTTP_400_BAD_REQUEST)
         
 
     
