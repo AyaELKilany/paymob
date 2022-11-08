@@ -168,4 +168,4 @@ EMAIL_HOST_USER = 'ayaelkilany735@gmail.com'
 EMAIL_HOST_PASSWORD = 'iyonivipteevxfyo'
 EMAIL_PORT = '587'
 EMAIL_USE_TLS = True
-DEFAULT_FROM_MAIL = 'default from email'
+DEFAULT_FROM_MAIL = 'ayaelkilany735@gmail.com'
